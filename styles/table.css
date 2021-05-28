@@ -1,0 +1,66 @@
+table {
+    margin: auto;
+    padding: 70px 0;
+    width: 80%;
+    table-layout: fixed;
+}
+
+.frcol {
+    width: 15%;
+    background: tomato;
+}
+
+.secol {
+    width: 50%;
+    background: turquoise
+}
+
+.thcol {
+    width: 10%;
+    background: tomato;
+}
+
+.focol {
+    width: 10%;
+    background: turquoise
+}
+
+.ficol {
+    width: 15%;
+    background: tomato
+}
+
+table thead tr th {
+    position: sticky;
+    top: 0;
+    background-color: black;
+    color: white;
+}
+
+table tbody {
+    overflow: auto;
+}
+
+th {
+    text-align: center;
+}
+td {
+    text-align: center;
+    word-wrap: break-word;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+#group {
+    text-align: left;
+}
+
+tbody th {
+    position: sticky;
+    top: 25px;
+    background-color: black;
+    color: white;
+}
+

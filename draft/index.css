@@ -1,0 +1,24 @@
+table {
+    width: 100%;
+    table-layout: fixed;
+  }
+  .ten {
+    width: 10%;
+    background: tomato;
+  }
+  .twenty {
+    width: 20%;
+    background: turquoise
+  }
+  /* see me */
+  td {
+    border: solid;
+  }
+  /* play with bg cells and cols ? */
+  
+  tr:nth-child(even) :nth-child(odd) {
+    background:rgba(100,255,50,0.3);
+    }
+  tr:nth-child(odd) :nth-child(even) {
+    background:rgba(255,255,255,0.3);
+    }
