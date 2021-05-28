@@ -2,6 +2,7 @@
 include_once 'db.php';
 include_once 'login.php';
 $query="SELECT * FROM subject";
+//a
 $result = mysqli_query($conn, $query);
 session_start();
 $email = $_SESSION['email'];
