@@ -1,25 +1,20 @@
-<!--hello-->
-<!--hello-->
-<!--hello-->
-<!--hello-->
-<!--hello-->
-<!--hello-->
-<!--hello-->
-<!--hello-->
 <?php
 include_once 'db.php';
 include_once 'login.php';
-$query="SELECT * FROM subject";
-//a
-$result = mysqli_query($conn, $query);
+
 session_start();
 $email = $_SESSION['email'];
 
+// Create a list of subject group's name
 $subjectGroupListsql = "SELECT name FROM subjectgroup";
-$subjectGroupList = mysqli_query($conn, $subjectGroupListsql);
-
+$subjectGroupListquery = mysqli_query($conn, $subjectGroupListsql);
+$subjectGroupList = [];
+while($subjectGroup=mysqli_fetch_assoc($subjectGroupListquery)) {
+    $subjectGroupList[] = $subjectGroup['name'];
+}
 ?>
 
+<!--page-->
 <!DOCTYPE html>
 <html>
 	<head>
@@ -33,7 +28,9 @@ $subjectGroupList = mysqli_query($conn, $subjectGroupListsql);
         <link rel="stylesheet" href="styles/index.css">
         <script src="index.js"></script>
 	</head>
+
     <body>
+        <!--Display table of subjects-->
         <form action="http://localhost/test/UETchecklist/save.php" method="post">
             <table class="table table-bordered">
                 <colgroup>
@@ -52,71 +49,88 @@ $subjectGroupList = mysqli_query($conn, $subjectGroupListsql);
                     <th>Học phần tiên quyết</th>
                 </tr>
                 </thead>
-            
+
                 <tbody>
+                    <?php
+                        //Loop through each subject group
+                        foreach ($subjectGroupList as $subjectGroupName) {
+                    ?>
+
+                    <!--Name of subject group-->
                     <tr>
-                        <th colspan="5" id="group">Khối kiến thức chung</th>
+                        <th colspan="5" id="group"><?php echo $subjectGroupName; ?></th>
                     </tr>
 
-                        <?php while($rows=mysqli_fetch_assoc($result)) 
-                        { 
+                    <?php
+                        //List of subject name, each subject a row
+                        $subjectListsql="SELECT * FROM subject WHERE subjectgroup = ?";
+                        $subjectListstmt = $conn->prepare($subjectListsql);
+                        $subjectListstmt->bind_param("s", $subjectGroupName);
+                        $subjectListstmt->execute();
+                        $subjectList = $subjectListstmt->get_result();
+                        while($rows = $subjectList->fetch_assoc()) { 
                     ?> 
-                            <tr> <td><?php echo $rows['code']; ?></td> 
-                                <td><?php echo $rows['name']; ?></td> 
-                                <td><?php echo $rows['credit']; ?></td> 
-                                <td>
-                                    <?php
-                                    
-                                    $query2="SELECT * FROM subjectfinished WHERE email = ? AND subject = ?";
-                                    $stmt = $conn->prepare($query2);
-                                    $stmt->bind_param("ss", $email, $rows['code']);
-                                    $stmt->execute();
-                                    $result1 = $stmt->get_result();
+                    
+                    <!--rows of subject-->
+                    <tr>
+                        <td><?php echo $rows['code']; ?></td> 
+                        <td><?php echo $rows['name']; ?></td> 
+                        <td><?php echo $rows['credit']; ?></td> 
+                        <td>
+                            <?php
+                                //Check if subject is finished or not (checked or not checked)                                  
+                                $checkSubjectsql="SELECT * FROM subjectfinished WHERE email = ? AND subject = ?";
+                                $checkSubjectstmt = $conn->prepare($checkSubjectsql);
+                                $checkSubjectstmt->bind_param("ss", $email, $rows['code']);
+                                $checkSubjectstmt->execute();
+                                $checkSubjectresult = $checkSubjectstmt->get_result();
         
-                                    if ($result1->num_rows > 0) {
-                                        echo "<input name=\"". $rows['code']. "\" type='checkbox' checked>";
-                                    } else {
-                                        echo "<input name=\"". $rows['code']. "\" type='checkbox'>";
-                                    }
-                                    ?>
-                                    <!--id=<//?php echo $rows['code']; ?>-->
-                                </td>
-                                <td><?php echo $rows['presubject']; ?></td>
-                            </tr> 
-                        <?php 
+                                if ($checkSubjectresult->num_rows > 0) {
+                                    echo "<input name=\"". $rows['code']. "\" type='checkbox' checked>";
+                                } else {
+                                    echo "<input name=\"". $rows['code']. "\" type='checkbox'>";
+                                }
+                            ?>
+                        </td>
+                        <td><?php echo $rows['presubject']; ?></td>
+                    </tr>
+
+                    <?php 
                         }
-                        //mysqli_close($conn); 
+                        }
                     ?> 
                     
                 </tbody>
             </table>
+
+            <!--Save changes-->
             <input type="submit" class="btn btn-primary" name="save" value="Lưu">
         </form>
-
+        <!--Add new subject-->
         <form action="http://localhost/test/UETchecklist/add.php" method="post">
             <div class="form-group">
                 <label>Mã học phần</label>
-                <input name="subjectCode" class="form-control">
+                <input name="subjectCode" class="form-control" required>
             </div>
             <div class="form-group">
                 <label>Học phần</label>
-                <input name="subjectName" class="form-control">
+                <input name="subjectName" class="form-control" required>
             </div>
             <div class="form-group">
                 <label>Số tín chỉ</label>
-                <input name="subjectCredit" class="form-control">
+                <input name="subjectCredit" class="form-control" required type="number" min="1" max="10">
             </div>
             <div class="form-group">
                 <label>Học phần tiên quyết</label>
-                <input name="preSubject" class="form-control" value="">
+                <input name="preSubject" class="form-control" value="" required>
             </div>
             <div class="form-group">
                 <label>Nhóm học phần</label>
-                <input list="subjectGroup" name="subjectGroup" class="form-control">
+                <input list="subjectGroup" name="subjectGroup" class="form-control" required>
                 <datalist id="subjectGroup">
                     <?php
-                        while($subjectGroup=mysqli_fetch_assoc($subjectGroupList)) {
-                            echo "<option value=\"". $subjectGroup['name']. "\">";
+                        foreach ($subjectGroupList as $subjectGroupName) {
+                            echo "<option value=\"". $subjectGroupName. "\">";
                         }
                     ?>
                 </datalist>

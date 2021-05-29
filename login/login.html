@@ -3,38 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Đăng nhập</title>
-    <link rel="stylesheet" href="acc.css">
-    <style type="text/css">
-        .wrapper{
-            width: 500px;
-            margin: 0 auto;
-        }
-    </style>
+    <link rel="stylesheet" href="-../styles/debug.css">
+    <link rel="stylesheet" href="../styles/accform.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
+    <h1>UET</h1>
+    <h1>Studying Process Tracker</h1>
     <div class="wrapper">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="page-header">
-                        <h2>Đăng nhập</h2>
-                    </div>
-                    <p>Điền thông tin tài khoảnn</p>
-                    <form action="http://localhost/test/UETchecklist/login.php" method="post">
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" name="email" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Mật khẩu</label>
-                            <input type="password" name="password" class="form-control">
-                        </div>
-                        <input type="submit" class="btn btn-primary" name="submit" value="Đăng nhập">
-                    </form>
-                    <a href="createacc.html">Tạo tài khoản</a>
-                </div>
-            </div>        
-        </div>
+        <h2>Đăng nhập</h2>
+        <p>Điền thông tin tài khoản</p>
+        
+        <form action="http://localhost/test/UETchecklist/login.php" method="post">
+            <div class="form">
+                <label for="email">Email</label>
+                <input class="text-box" type="email" name="email" id="email" required>
+            </div>
+            <div class="form">
+                <label for = "password">Mật khẩu</label>
+                <input class="text-box" type="password" name="password" id="password" required>
+            </div>
+            <input class="btn" type="submit" name="submit" value="Đăng nhập">
+        </form>
+        
+        <form action="createacc.html">
+            <input class="btn" type="submit" value="Tạo tài khoản">
+        </form>
     </div>
 </body>
 </html>
