@@ -1,40 +1,37 @@
 table {
     margin: auto;
     padding: 70px 0;
-    width: 80%;
+    width: 90%;
     table-layout: fixed;
+    
 }
 
 .frcol {
-    width: 15%;
-    background: tomato;
+    width: 10%;
 }
 
 .secol {
     width: 50%;
-    background: turquoise
 }
 
 .thcol {
     width: 10%;
-    background: tomato;
 }
 
 .focol {
     width: 10%;
-    background: turquoise
 }
 
 .ficol {
-    width: 15%;
-    background: tomato
+    width: 20%;
 }
 
 table thead tr th {
     position: sticky;
     top: 0;
-    background-color: black;
     color: white;
+    height: 60px;
+    background-color: black;
 }
 
 table tbody {
@@ -47,11 +44,14 @@ th {
 td {
     text-align: center;
     word-wrap: break-word;
+    border: 1px solid rgba(255, 255, 255, 0.342);
+    border-radius: 5px;
+    height: 40px;
 }
 
-tr:nth-child(even) {
+/*tr:nth-child(even) {
     background-color: #dddddd;
-}
+}*/
 
 #group {
     text-align: left;
@@ -59,8 +59,8 @@ tr:nth-child(even) {
 
 tbody th {
     position: sticky;
-    top: 25px;
-    background-color: black;
+    top: 60px;
     color: white;
+    background-color: black;
 }
 

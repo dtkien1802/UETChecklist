@@ -1,3 +1,22 @@
+<?php
+    session_start();
+    $message="";
+    if(count($_POST)>0) {
+        $con = mysqli_connect('localhost','root','','K64CCLC_CTDT') or die('Unable To connect');
+        $result = mysqli_query($con,"SELECT * FROM accounts WHERE email='". $_POST["email"]. "' and password = '" . $_POST["password"]. "'");
+        $row  = mysqli_fetch_array($result);
+        if(is_array($row)) {
+        $_SESSION["email"] = $row['email'];
+        $_SESSION["name"] = $row['name'];
+        } else {
+         $message = "Sai Email hoặc Mật khẩu! ";
+        }
+    }
+    if(isset($_SESSION["email"])) {
+    header("Location:../index.php");
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +34,8 @@
         <h2>Đăng nhập</h2>
         <p>Điền thông tin tài khoản</p>
         
-        <form action="http://localhost/test/UETchecklist/login.php" method="post">
+        <form method="post" action="">
+            
             <div class="form">
                 <label for="email">Email</label>
                 <input class="text-box" type="email" name="email" id="email" required>
@@ -24,6 +44,7 @@
                 <label for = "password">Mật khẩu</label>
                 <input class="text-box" type="password" name="password" id="password" required>
             </div>
+            <div class="message"><?php if($message!="") { echo $message; } ?></div>
             <input class="btn" type="submit" name="submit" value="Đăng nhập">
         </form>
         
