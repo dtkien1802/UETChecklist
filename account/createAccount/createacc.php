@@ -1,5 +1,5 @@
 <?php
-include_once 'db.php';
+include_once '../../db.php';
 if(isset($_POST['submit']))
 {    
    $name = $_POST['name'];
@@ -14,12 +14,12 @@ if(isset($_POST['submit']))
    $checkAccstmt->execute();
    $checkAcc = $checkAccstmt->get_result();
    if ($checkAcc->num_rows > 0) {
-      header( 'Location: http://127.0.0.1:5500/login/accalreadyhave.html' );
+      header( 'Location: accalreadyhave.html' );
       exit();
    }
    //Check 2 password match
    elseif ($password != $password2) {
-      header( 'Location: http://127.0.0.1:5500/login/passwordnotmatch.html' );
+      header( 'Location: passwordnotmatch.html' );
       exit();
    }
    else {
@@ -35,7 +35,7 @@ if(isset($_POST['submit']))
       VALUES ('$email',NULL)";
       if (mysqli_query($conn, $sql2)) {
          echo "Tao record thanh cong !";
-         header( 'Location: http://127.0.0.1:5500/login/createaccsuccess.html' );
+         header( 'Location: createaccsuccess.html' );
          exit();
       } else {
          echo "Error: " . $sql2 . ":-" . mysqli_error($conn);

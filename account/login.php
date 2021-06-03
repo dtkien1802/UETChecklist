@@ -48,7 +48,7 @@
             <input class="btn" type="submit" name="submit" value="Đăng nhập">
         </form>
         
-        <form action="createacc.html">
+        <form action="createAccount/createacc.html">
             <input class="btn" type="submit" value="Tạo tài khoản">
         </form>
     </div>

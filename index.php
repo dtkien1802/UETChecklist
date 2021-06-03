@@ -74,13 +74,13 @@ while($subjectGroup=mysqli_fetch_assoc($subjectGroupListquery)) {
         if($_SESSION["email"]) {
             $email = $_SESSION['email'];
             echo "Chào ". $email. "
-            <form action=\"login/logout.php\">
+            <form action=\"account/logout.php\">
             <input class=\"btn\" type=\"submit\" value=\"Đăng xuất\">
             </form>
             ";
         } else {
             echo "Bạn chưa đăng nhập". $email. " 
-            <form action=\"login/login.php\">
+            <form action=\"account/login.php\">
             <input class=\"btn\" type=\"submit\" value=\"Đăng nhập\">
             </form>
             ";
@@ -164,15 +164,15 @@ while($subjectGroup=mysqli_fetch_assoc($subjectGroupListquery)) {
             </table>
 
             <!--Save changes-->
-            <input type="submit" name="save" value="Lưu-" class="btn">
+            <input type="submit" name="save" value="Lưu" class="btn">
         </form>
         <!--Add new subject-->
         <div class="wrapper" style="margin-top: 40px;">
             <h2>Thêm học phần</h2>
-            <form action="http://localhost/test/UETchecklist/add.php" method="post">
+            <form action="http://localhost/test/UETchecklist/addSubject.php" method="post" autocomplete="off">
                 <div class="form">
                     <label>Mã học phần</label>
-                    <input name="subjectCode" class="text-box" required>
+                    <input name="subjectCode" class="text-box" required placeholder="Ví dụ: ABC_1234">
                 </div>
                 <div class="form">
                     <label>Học phần</label>
@@ -184,7 +184,7 @@ while($subjectGroup=mysqli_fetch_assoc($subjectGroupListquery)) {
                 </div>
                 <div class="form">
                     <label>Học phần tiên quyết</label>
-                    <input name="preSubject" class="text-box" value="">
+                    <input name="preSubject" class="text-box" value="" placeholder="Ví dụ: ABC_1234/Để trống nếu không có">
                 </div>
                 <div class="form">
                     <label>Nhóm học phần</label>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Tạo tài khoản</title>
-    <link rel="stylesheet" href="-../styles/debug.css">
-    <link rel="stylesheet" href="../styles/accform.css">
+    <link rel="stylesheet" href="-../../styles/debug.css">
+    <link rel="stylesheet" href="../../styles/accform.css">
     <style type="text/css">
         .wrapper{
             width: 500px;
@@ -19,7 +19,7 @@
         <h2>Tạo tài khoản mới</h2>
         <p>Điền thông tin</p>
 
-        <form action="http://localhost/test/UETchecklist/createacc.php" method="post">
+        <form action="createacc.php" method="post">
             <div class="form">
                 <label for="name">Tên</label>
                 <input class="text-box" type="text" name="name" id="name" required>
@@ -38,7 +38,7 @@
             </div>
             <input type="submit" class="btn" name="submit" value="Tạo tài khoản">
         </form>
-        <form action="login.php">
+        <form action="../login.php">
             <input class="btn" type="submit" value="Đăng nhập">
         </form>
     </div>
