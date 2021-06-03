@@ -1,11 +1,47 @@
 <?php
-include_once 'db.php';
+
 session_start();
 
 
 // Create a list of subject group's name
+$conn = mysqli_connect('localhost','root','','K64CCLC_CTDT') or die('Unable To connect');
 $subjectGroupListsql = "SELECT * FROM subjectgroup";
 $subjectGroupListquery = mysqli_query($conn, $subjectGroupListsql);
+
+// Save subject changes
+if(isset($_POST['save'])) {
+    $savesql="SELECT code FROM subject";
+    $save = mysqli_query($conn, $savesql);
+    
+    // Loop through all subject
+    while($rows=mysqli_fetch_assoc($save)) {
+        $email = $_SESSION['email'];
+        
+        // Check if subject already in db or not
+        $checkSavesql="SELECT * FROM subjectfinished WHERE email = ? AND subject = ?";
+        $checkSavestmt = $conn->prepare($checkSavesql);
+        $checkSavestmt->bind_param("ss", $email, $rows['code']);
+        $checkSavestmt->execute();
+        $checkSave = $checkSavestmt->get_result();
+        
+        // If not in db and checked in page
+        if(isset($_POST[$rows['code']]) && $checkSave->num_rows == 0) {
+            $saveSubjectsql = "INSERT INTO subjectfinished VALUES(?, ?)";
+            $saveSubjectstmt = $conn->prepare($saveSubjectsql);
+            $saveSubjectstmt->bind_param("ss", $email, $rows['code']);
+            $saveSubjectstmt->execute();
+        } 
+        // If in db and unchecked in page
+        elseif (!isset($_POST[$rows['code']]) && $checkSave->num_rows == 1) {
+            $saveSubjectsql = "DELETE FROM subjectfinished WHERE email = ? AND subject = ?";
+            $saveSubjectstmt = $conn->prepare($saveSubjectsql);
+            $saveSubjectstmt->bind_param("ss", $email, $rows['code']);
+            $saveSubjectstmt->execute();
+        }
+    }
+    header("Location:savesucess.php");
+}
+
 $subjectGroupList = [];
 while($subjectGroup=mysqli_fetch_assoc($subjectGroupListquery)) {
     $new_arr = array($subjectGroup['name'], $subjectGroup['credit']);
@@ -53,7 +89,7 @@ while($subjectGroup=mysqli_fetch_assoc($subjectGroupListquery)) {
         
         ?></a></p>
         <!--Display table of subjects-->
-        <form action="http://localhost/test/UETchecklist/save.php" method="post">
+        <form action="" method="post">
             <table class="table table-bordered">
                 <colgroup>
                     <col class="frcol"/>
@@ -76,11 +112,12 @@ while($subjectGroup=mysqli_fetch_assoc($subjectGroupListquery)) {
                     <?php
                         //Loop through each subject group
                         foreach ($subjectGroupList as $subjectGroupName) {
+                            
                     ?>
 
                     <!--Name of subject group-->
                     <tr>
-                        <th colspan="5" id="group"><?php echo $subjectGroupName[0]. " - ". $subjectGroupName[1] ?></th>
+                        <th colspan="5" class="subjectGroup"><?php echo $subjectGroupName[0]; ?></th>
                     </tr>
 
                     <?php
@@ -90,7 +127,8 @@ while($subjectGroup=mysqli_fetch_assoc($subjectGroupListquery)) {
                         $subjectListstmt->bind_param("s", $subjectGroupName[0]);
                         $subjectListstmt->execute();
                         $subjectList = $subjectListstmt->get_result();
-                        while($rows = $subjectList->fetch_assoc()) { 
+                        $count = 0;
+                        while($rows = $subjectList->fetch_assoc()) {
                     ?> 
                     
                     <!--rows of subject-->
@@ -106,8 +144,8 @@ while($subjectGroup=mysqli_fetch_assoc($subjectGroupListquery)) {
                                 $checkSubjectstmt->bind_param("ss", $email, $rows['code']);
                                 $checkSubjectstmt->execute();
                                 $checkSubjectresult = $checkSubjectstmt->get_result();
-        
                                 if ($checkSubjectresult->num_rows > 0) {
+                                    $count += $rows['credit'];
                                     echo "<input class=\"cbox\" name=\"". $rows['code']. "\" type='checkbox' checked>";
                                 } else {
                                     echo "<input class=\"cbox\" name=\"". $rows['code']. "\" type='checkbox'>";
@@ -119,14 +157,14 @@ while($subjectGroup=mysqli_fetch_assoc($subjectGroupListquery)) {
 
                     <?php 
                         }
+                        echo "<tr><td><td></td></td><td>".$count. "/". $subjectGroupName[1]. "</td><td></td><td></td></tr>";
                         }
                     ?> 
-                    
                 </tbody>
             </table>
 
             <!--Save changes-->
-            <input type="submit" name="save" value="Lưu" class="btn">
+            <input type="submit" name="save" value="Lưu-" class="btn">
         </form>
         <!--Add new subject-->
         <div class="wrapper" style="margin-top: 40px;">
@@ -146,7 +184,7 @@ while($subjectGroup=mysqli_fetch_assoc($subjectGroupListquery)) {
                 </div>
                 <div class="form">
                     <label>Học phần tiên quyết</label>
-                    <input name="preSubject" class="text-box" value="" required>
+                    <input name="preSubject" class="text-box" value="">
                 </div>
                 <div class="form">
                     <label>Nhóm học phần</label>

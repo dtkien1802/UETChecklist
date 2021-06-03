@@ -6,7 +6,8 @@ $result = mysqli_query($conn, $query);
 //session_start();
 if(isset($_POST['save']))
 {    
-    while($rows=mysqli_fetch_assoc($result)) {
+    header("Location:http://localhost/test/UETchecklist/savesucess.php");
+    /*while($rows=mysqli_fetch_assoc($result)) {
         
         $email = $_SESSION['email'];
         $query2="SELECT * FROM subjectfinished WHERE email = ? AND subject = ?";
@@ -33,11 +34,13 @@ if(isset($_POST['save']))
         if(isset($_POST[$rows['code']]) && $result1->num_rows == 0){
             echo "ok2";
             echo "<br>";
-        }*/
-    }
+        }
+    }*/
     
 
-    //header( 'Location: http://localhost/test/UETchecklist/login/loginsuccess.html' );
+    
+    
+    //die();
     //exit();
     //$email = $_SESSION['email'];
     //echo $email;
@@ -45,16 +48,3 @@ if(isset($_POST['save']))
 }
 
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-<a href='http://localhost/test/UETchecklist/index.php'>Tải lại</a>
-</body>
-</html>
