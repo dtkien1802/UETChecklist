@@ -8,25 +8,6 @@ $conn = mysqli_connect('localhost','root','','K64CCLC_CTDT') or die('Unable To c
 $subjectGroupListsql = "SELECT * FROM subjectgroup";
 $subjectGroupListquery = mysqli_query($conn, $subjectGroupListsql);
 
-//Check if subject is finished or not (checked or not checked)
-function checkSubject($conn, $count, $rows, $email) {
-    $checkSubjectsql="SELECT * FROM subjectfinished WHERE email = ? AND subject = ?";
-    $checkSubjectstmt = $conn->prepare($checkSubjectsql);
-    $checkSubjectstmt->bind_param("ss", $email, $rows['code']);
-    $checkSubjectstmt->execute();
-    $checkSubjectresult = $checkSubjectstmt->get_result();
-
-    if ($checkSubjectresult->num_rows > 0) {
-        $count += $rows['credit'];
-        echo "<input class=\"cbox\" name=\"". $rows['code']. "\" type='checkbox' checked>";
-    } else {
-        echo "<input class=\"cbox\" name=\"". $rows['code']. "\" type='checkbox'>";
-    }
-    return $count;
-}                                  
-
-
-
 // Save subject changes
 if(isset($_POST['save'])) {
     $savesql="SELECT code FROM subject";
@@ -151,7 +132,7 @@ while($subjectGroup=mysqli_fetch_assoc($subjectGroupListquery)) {
                         $subjectSelection = [];
                         while($rows = $subjectList->fetch_assoc()) {
                             if($rows['subjectsubgroup']) {
-                                //$subjectSelection[] = $rows;
+                                $subjectSelection[] = $rows;
                                 continue;
                             }
                     ?> 
@@ -163,12 +144,8 @@ while($subjectGroup=mysqli_fetch_assoc($subjectGroupListquery)) {
                         <td><?php echo $rows['credit']; ?></td> 
                         <td>
                             <?php
-
-
-                                $count = checkSubject($conn, $count, $rows, $email);
-
                                 //Check if subject is finished or not (checked or not checked)                                  
-                    /*            $checkSubjectsql="SELECT * FROM subjectfinished WHERE email = ? AND subject = ?";
+                                $checkSubjectsql="SELECT * FROM subjectfinished WHERE email = ? AND subject = ?";
                                 $checkSubjectstmt = $conn->prepare($checkSubjectsql);
                                 $checkSubjectstmt->bind_param("ss", $email, $rows['code']);
                                 $checkSubjectstmt->execute();
@@ -180,7 +157,6 @@ while($subjectGroup=mysqli_fetch_assoc($subjectGroupListquery)) {
                                 } else {
                                     echo "<input class=\"cbox\" name=\"". $rows['code']. "\" type='checkbox'>";
                                 }
-                    */
                             ?>
                         </td>
                         <td><?php 
@@ -193,58 +169,8 @@ while($subjectGroup=mysqli_fetch_assoc($subjectGroupListquery)) {
 
                     <?php 
                         }
-                        //subject subgroup
-                        
-                        $subjectSubgroupListquery = mysqli_query($conn, "SELECT * FROM subject WHERE subjectgroup = '". $subjectGroupName[0]. "' AND subjectsubgroup IS NOT NULL ORDER BY subjectsubgroup");
-                        
-                        //check if subject group has subgroup
-                        if(mysqli_num_rows($subjectSubgroupListquery) > 0) {
-                            $countsub = 0;
-                            $currentSubgroup = "";
-                            
-                            //loop through all subject in all subject subgroup
-                            //until the end of subgroup, total credit will show
-                            while($rows = mysqli_fetch_assoc($subjectSubgroupListquery)) {
-                                if($currentSubgroup != $rows['subjectsubgroup']) {
-                                    
-                                    //check if subgroup change, if change and not the first loop, show total credit
-                                    if($currentSubgroup != "") {
-                                        $subgroupCreditquery = mysqli_query($conn, "SELECT * FROM subjectsubgroup WHERE name = '". $rows['subjectsubgroup']. "'");
-                                        $subgroupCredit = mysqli_fetch_assoc($subgroupCreditquery);
-                                        echo "<tr><td>".$countsub. "/-". $subgroupCredit['credit']."</td></tr>";
-                                    }
-
-                                    //update current subgroup
-                                    $currentSubgroup = $rows['subjectsubgroup'];
-                                    ?>
-                                    <tr><td colspan=5><?php echo $currentSubgroup ?></td></tr>
-                                    <?php
-                                }
-
-                                //show row of subject
-                                ?>
-                                <tr><td><?php echo $rows['code']; ?></td>
-                                    <td><?php echo $rows['name']; ?></td>
-                                    <td><?php echo $rows['credit']; ?></td>
-                                    <td><?php $countsub = checkSubject($conn, $countsub, $rows, $email); ?></td>
-                                    <td><?php echo $rows['presubject']; ?></td></tr>
-                                <?php
-                            }
-
-                            //until the end of subgroup, total credit will show
-                            $subgroupCreditquery = mysqli_query($conn, "SELECT * FROM subjectsubgroup WHERE name = '". $currentSubgroup. "'");
-                            $subgroupCredit = mysqli_fetch_assoc($subgroupCreditquery);
-                            echo "<tr><td></td><td></td><td>".$countsub. "/". $subgroupCredit['credit']."</td><td></td><td></td></tr>";
-                            echo $rows['subjectsubgroup'];
-                            ?>
-                            
-                            <?php
-                        }
-
-
-
-
-            /*                echo "<tr><td colspan=5>". $subjectSelection[0]['subjectsubgroup']. "</td></tr>";
+                        if($subjectSelection) {
+                            echo "<tr><td colspan=5>". $subjectSelection[0]['subjectsubgroup']. "</td></tr>";
                             $finished = "";
 
                             // find finished subject in selection group, stored code in $finished
@@ -273,7 +199,7 @@ while($subjectGroup=mysqli_fetch_assoc($subjectGroupListquery)) {
                                 }
                                 echo"   <td>". $subjectSelectionName['presubject']. "</td></tr>";
                             }
-                */        
+                        }
                         echo "<tr><td><td></td></td><td>".$count. "/". $subjectGroupName[1]. "</td><td></td><td></td></tr>";
                         }
                     ?> 
