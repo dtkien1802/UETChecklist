@@ -56,3 +56,8 @@ h1 {
     font-size: 40px;
     padding-top: 10px;
 }
+
+.subsubgroup {
+    font-weight: 100;
+    font-style: italic;
+}

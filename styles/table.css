@@ -31,7 +31,7 @@ table thead tr th {
     top: 0;
     color: white;
     height: 60px;
-    background-color: black;
+    background-color: red;
 }
 
 table tbody {
@@ -61,6 +61,6 @@ tbody th {
     position: sticky;
     top: 60px;
     color: white;
-    background-color: black;
+    background-color: red;
 }
 
