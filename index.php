@@ -85,6 +85,7 @@ while($group=mysqli_fetch_assoc($groupListquery)) {
 
         <link rel="stylesheet" href="collapse.css">
 
+        
 	</head>
 
     <body>
@@ -115,37 +116,39 @@ while($group=mysqli_fetch_assoc($groupListquery)) {
 
         ?>
 
+            
+
         <!--Display table of subjects-->
         <form action="" method="post">
 
             <!-- table header -->
             <table class="table table-bordered">
-                <colgroup>
-                    <col class="frcol"/>
-                    <col class="secol"/>
-                    <col class="thcol"/>
-                    <col class="focol"/>
-                    <col class="ficol"/>
-                </colgroup>
-
-                <thead>
-                <tr>
-                    <th>Mã học phần</th>
-                    <th>Học phần</th>
-                    <th>Số tín chỉ</th>
-                    <th>Đã học</th>
-                    <th>Học phần tiên quyết</th>
-                </tr>
-                </thead>
-
-                <tbody>
+                
+            </table>
                     <!--Loop through each subject group-->
                     <?php foreach ($groupList as $groupName) { ?>
                         
-                            <!--Name of subject group-->
-                            <tr>
-                                <th colspan="5" class="subjectGroup"><?php echo $groupName[0]; ?></th>
-                            </tr>
+                        <!--Name of subject group-->
+                        <h1 class="collapsible"><?php echo $groupName[0]; ?></h1>
+                        <div class="content" style="background-color: black">
+                            <table>
+                                <colgroup>
+                                    <col class="frcol"/>
+                                    <col class="secol"/>
+                                    <col class="thcol"/>
+                                    <col class="focol"/>
+                                    <col class="ficol"/>
+                                </colgroup>
+
+                                <thead>
+                                <tr>
+                                    <th>Mã học phần</th>
+                                    <th>Học phần</th>
+                                    <th>Số tín chỉ</th>
+                                    <th>Đã học</th>
+                                    <th>Học phần tiên quyết</th>
+                                </tr>
+                                </thead>
 
                             <?php
                                 //List of subject name, each subject a row
@@ -165,13 +168,14 @@ while($group=mysqli_fetch_assoc($groupListquery)) {
                             
                             <!--rows of subject-->
                             <tr>
-                                <td><?php echo $rows['code']; ?></td> 
+                                <td id = <?php echo "\"". $rows['code']. "\""; ?>><?php echo $rows['code']; ?></td> 
                                 <td><?php echo $rows['name']; ?></td> 
                                 <td><?php echo $rows['credit']; ?></td>
                                 <!-- checkbox --> 
                                 <td><?php $count = checkSubject($conn, $count, $rows, $email); ?></td>
                                 <!-- presubject -->
-                                <td><?php echo $rows['presubject']; if($rows['presubject2']){echo ", ". $rows['presubject2'];}?></td>
+                                <td><a title="a" href = <?php echo "\"#". $rows['presubject']. "\""; ?>><?php echo $rows['presubject']; ?></a>
+                                <?php if($rows['presubject2']){echo ", <a href = \"#". $rows['presubject2']. "\">". $rows['presubject2']. "</a>";}?></td>
                             </tr>
 
                             <?php 
@@ -219,7 +223,8 @@ while($group=mysqli_fetch_assoc($groupListquery)) {
                                             <td><?php echo $rows['name']; ?></td>
                                             <td><?php echo $rows['credit']; ?></td>
                                             <td><?php $countsub = checkSubject($conn, $countsub, $rows, $email); ?></td>
-                                            <td><?php echo $rows['presubject']; if($rows['presubject2']){echo ", ". $rows['presubject2']; }?></td></tr>
+                                            <td><a title="a" href = <?php echo "\"#". $rows['presubject']. "\""; ?>><?php echo $rows['presubject']; ?></a>
+                                            <?php if($rows['presubject2']){echo ", <a href = \"#". $rows['presubject2']. "\">". $rows['presubject2']. "</a>";}?></td>
                                         <?php
                                     }
 
@@ -235,18 +240,8 @@ while($group=mysqli_fetch_assoc($groupListquery)) {
                                 $creditFinished += $count;
 
                                 ?> 
-                        
-                                <?php
-
-                                }
-                                //show total finished credit
-                                $totalCreditquery = mysqli_query($conn, "SELECT SUM(credit) AS total FROM subjectgroup");
-                                $totalCredit = mysqli_fetch_assoc($totalCreditquery);
-                                echo "<h1>Bạn đã hoàn thành ". $creditFinished. "/". $totalCredit['total']. "</h1>";
-                            ?> 
-
-                </tbody>
-            </table>
+                            </table>
+                        </div><?php } ?> 
 
             <!--Save changes-->
             <input type="submit" name="save" value="Lưu" class="btn">
@@ -307,4 +302,12 @@ while($group=mysqli_fetch_assoc($groupListquery)) {
         </script>
 
     </body>
+    <footer>
+        <?php 
+        //show total finished credit
+        $totalCreditquery = mysqli_query($conn, "SELECT SUM(credit) AS total FROM subjectgroup");
+        $totalCredit = mysqli_fetch_assoc($totalCreditquery);
+        echo "<h1>Bạn đã hoàn thành ". $creditFinished. "/". $totalCredit['total']. "</h1>";
+        ?>
+    </footer>
 </html>
