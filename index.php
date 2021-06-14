@@ -126,10 +126,10 @@ while($group=mysqli_fetch_assoc($groupListquery)) {
                 
             </table>
                     <!--Loop through each subject group-->
-                    <?php foreach ($groupList as $groupName) { ?>
+                    <?php $groupIndex=0; $groupName = "subjectgroup"; foreach ($groupList as $groupName) { ?>
                         
                         <!--Name of subject group-->
-                        <h1 class="collapsible"><?php echo $groupName[0]; ?></h1>
+                        <h1 class="collapsible" id=<?php echo "\"".$groupName. $groupIndex. "\""; ?>><?php echo $groupName[0]; ?></h1>
                         <div class="content" style="background-color: black">
                             <table>
                                 <colgroup>
@@ -238,10 +238,15 @@ while($group=mysqli_fetch_assoc($groupListquery)) {
                                 }
                                 echo "<tr><td><td></td></td><td>".$count. "/". $groupName[1]. "</td><td></td><td></td></tr>";
                                 $creditFinished += $count;
-
+                                
                                 ?> 
                             </table>
-                        </div><?php } ?> 
+                        </div>
+                        <script>
+                            document.getElementById(<?php echo "\"". $groupName. $groupIndex. "\"" ?>).innerHTML = "<?php echo $groupName[0]. ' '. $count. '/'. $groupName[1]. '  '. $groupID; $groupIndex++;?>"
+                        </script>
+                    <?php } ?> 
+                        
 
             <!--Save changes-->
             <input type="submit" name="save" value="Lưu" class="btn">
